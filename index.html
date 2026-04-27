@@ -37,16 +37,14 @@
       gap: 12px;
       margin-bottom: 10px;
     }
-    .input-wrapper { flex: 1; position: relative; }
     input {
-      width: 100%;
+      flex: 1;
       padding: 16px 20px;
       border: 2px solid transparent;
       border-radius: 14px;
       font-size: 1.1rem;
       background: rgba(255, 255, 255, 0.95);
       color: #0f172a;
-      transition: all 0.3s;
       outline: none;
     }
     input:focus {
@@ -61,15 +59,9 @@
       border-radius: 14px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
     }
     button:hover { background: #f59e0b; transform: translateY(-2px); }
-    .hint {
-      font-size: 0.85rem;
-      margin-top: 10px;
-      opacity: 0.7;
-    }
+    .hint { font-size: 0.85rem; margin-top: 10px; opacity: 0.7; }
     .result { display: none; background: #ffffff; color: #1e2937; border-radius: 16px; padding: 25px; margin-top: 25px; animation: slideUp 0.4s ease-out; }
     .result.show { display: block; }
     .result-header {
@@ -125,13 +117,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    footer {
-      margin-top: auto;
-      padding: 20px;
-      text-align: center;
-      opacity: 0.6;
-      font-size: 0.85rem;
-    }
+    footer { margin-top: auto; padding: 20px; text-align: center; opacity: 0.6; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -142,9 +128,7 @@
     </header>
     <div class="card">
       <div class="search-area">
-        <div class="input-wrapper">
-          <input type="text" id="inputDado" placeholder="Digite CEP, Telefone, CNPJ ou Discord User ID..." autocomplete="off">
-        </div>
+        <input type="text" id="inputDado" placeholder="Digite CEP, Telefone, CNPJ ou Discord User ID..." autocomplete="off">
         <button id="btnConsultar">CONSULTAR</button>
       </div>
       <p class="hint">
@@ -167,7 +151,7 @@
   </div>
 
   <footer>
-    Utilizando ViaCEP, BrasilAPI e lookup público de Discord User ID
+    ViaCEP • BrasilAPI • dclookup.id (Discord)
   </footer>
 
   <script>
@@ -182,11 +166,8 @@
     inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') puxarDados(); });
 
     async function puxarDados() {
-      let valor = inputField.value.trim();
-      if (!valor) {
-        showError('Digite algo para consultar.');
-        return;
-      }
+      let valor = inputField.value.trim().replace(/\s+/g, '');
+      if (!valor) return showError('Digite algo para consultar.');
 
       errorBox.style.display = 'none';
       resultado.classList.remove('show');
@@ -195,7 +176,6 @@
 
       try {
         let tipo = "";
-        valor = valor.replace(/\s+/g, ''); // remove espaços
 
         if (valor.length === 8 && !isNaN(valor)) {
           // CEP
@@ -206,7 +186,7 @@
           renderCEP(data);
 
         } else if ((valor.length === 10 || valor.length === 11) && !isNaN(valor)) {
-          // Telefone (DDD)
+          // Telefone
           tipo = "Localidade de Telefone";
           const ddd = valor.substring(0, 2);
           const res = await fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
@@ -223,16 +203,15 @@
           renderCNPJ(data);
 
         } else if (valor.length >= 17 && valor.length <= 20 && !isNaN(valor)) {
-          // Discord User ID
+          // Discord User ID (API atualizada)
           tipo = "Discord User";
-          const userId = valor;
-          const res = await fetch(`https://discordlookup.com/api/user/${userId}`);
-          if (!res.ok) throw new Error("User ID não encontrado ou API indisponível.");
+          const res = await fetch(`https://dclookup.id/api/user/${valor}`);
+          if (!res.ok) throw new Error("User ID não encontrado ou temporariamente indisponível.");
           const data = await res.json();
           renderDiscord(data);
 
         } else {
-          throw new Error("Formato inválido. Verifique o exemplo abaixo.");
+          throw new Error("Formato inválido. Use os exemplos acima.");
         }
 
         document.getElementById('tipoConsulta').innerText = `✅ ${tipo}`;
@@ -247,52 +226,48 @@
     }
 
     function renderCEP(data) {
-      const items = [
+      buildGrid([
         { label: "Logradouro", value: data.logradouro || '—' },
         { label: "Bairro", value: data.bairro || '—' },
         { label: "Cidade", value: data.localidade },
         { label: "Estado", value: data.uf },
         { label: "DDD", value: data.ddd },
         { label: "IBGE", value: data.ibge }
-      ];
-      buildGrid(items);
+      ]);
     }
 
     function renderCNPJ(data) {
-      const items = [
+      buildGrid([
         { label: "Razão Social", value: data.razao_social },
         { label: "Nome Fantasia", value: data.nome_fantasia || 'Não informado' },
         { label: "Situação", value: data.descricao_situacao_cadastral },
         { label: "Abertura", value: data.data_inicio_atividade },
         { label: "Cidade/UF", value: `${data.municipio} - ${data.uf}` },
-        { label: "Capital Social", value: `R$ ${Number(data.capital_social).toLocaleString('pt-BR')}` }
-      ];
-      buildGrid(items);
+        { label: "Capital Social", value: `R$ ${Number(data.capital_social || 0).toLocaleString('pt-BR')}` }
+      ]);
     }
 
     function renderTelefone(data, original) {
-      const items = [
+      buildGrid([
         { label: "Número", value: original },
         { label: "Estado", value: data.state },
         { label: "Tipo", value: original.length === 11 ? "Celular" : "Fixo" },
         { label: "Cidades", value: data.cities ? data.cities.slice(0,4).join(', ') + '...' : '—' }
-      ];
-      buildGrid(items);
+      ]);
     }
 
     function renderDiscord(data) {
-      const createdDate = new Date((BigInt(data.id) >> 22n) + 1420070400000n).toLocaleDateString('pt-BR');
-      const avatarUrl = data.avatar ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png?size=128` : null;
+      const created = new Date(Number(BigInt(data.id) >> 22n) + 1420070400000).toLocaleDateString('pt-BR');
+      const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png?size=128` : null;
 
-      const items = [
+      buildGrid([
         { label: "Username", value: data.username || data.tag || '—' },
         { label: "Global Name", value: data.global_name || data.display_name || 'Não definido' },
         { label: "User ID", value: data.id },
-        { label: "Conta Criada", value: createdDate },
+        { label: "Conta Criada", value: created },
         { label: "Bot", value: data.bot ? "Sim" : "Não" },
-        { label: "Avatar", value: avatarUrl ? `<a href="${avatarUrl}" target="_blank">Ver Avatar</a>` : 'Sem avatar' }
-      ];
-      buildGrid(items);
+        { label: "Avatar", value: avatar ? `<a href="${avatar}" target="_blank">Ver Avatar</a>` : 'Sem avatar' }
+      ]);
     }
 
     function buildGrid(items) {
