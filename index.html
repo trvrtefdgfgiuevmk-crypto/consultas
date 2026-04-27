@@ -6,13 +6,7 @@
   <title>Painel de Consulta Pro</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e40af);
@@ -21,31 +15,15 @@
       display: flex;
       flex-direction: column;
     }
-
     .container {
       max-width: 900px;
       width: 100%;
       margin: 40px auto;
       padding: 20px;
     }
-
-    header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 600;
-      letter-spacing: -1px;
-    }
-
-    .subtitle {
-      opacity: 0.8;
-      font-size: 1.1rem;
-      margin-top: 8px;
-    }
-
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { font-size: 2.5rem; font-weight: 600; letter-spacing: -1px; }
+    .subtitle { opacity: 0.8; font-size: 1.1rem; margin-top: 8px; }
     .card {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(12px);
@@ -54,18 +32,12 @@
       padding: 30px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     }
-
     .search-area {
       display: flex;
       gap: 12px;
       margin-bottom: 10px;
     }
-
-    .input-wrapper {
-      flex: 1;
-      position: relative;
-    }
-
+    .input-wrapper { flex: 1; position: relative; }
     input {
       width: 100%;
       padding: 16px 20px;
@@ -77,12 +49,10 @@
       transition: all 0.3s;
       outline: none;
     }
-
     input:focus {
       border-color: #fbbf24;
       background: #fff;
     }
-
     button {
       padding: 0 32px;
       background: #fbbf24;
@@ -94,42 +64,14 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-
-    button:hover {
-      background: #f59e0b;
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
+    button:hover { background: #f59e0b; transform: translateY(-2px); }
     .hint {
       font-size: 0.85rem;
       margin-top: 10px;
-      opacity: 0.6;
-      color: #fff;
+      opacity: 0.7;
     }
-
-    .result {
-      display: none;
-      background: #ffffff;
-      color: #1e2937;
-      border-radius: 16px;
-      padding: 25px;
-      margin-top: 25px;
-      animation: slideUp 0.4s ease-out;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .result.show {
-      display: block;
-    }
-
+    .result { display: none; background: #ffffff; color: #1e2937; border-radius: 16px; padding: 25px; margin-top: 25px; animation: slideUp 0.4s ease-out; }
+    .result.show { display: block; }
     .result-header {
       display: flex;
       justify-content: space-between;
@@ -138,57 +80,39 @@
       border-bottom: 1px solid #e2e8f0;
       padding-bottom: 15px;
     }
-
     .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 15px;
     }
-
     .info-item {
       background: #f1f5f9;
       padding: 15px;
       border-radius: 12px;
-      transition: background 0.2s;
       border-left: 4px solid #3b82f6;
     }
-
-    .info-item:hover {
-      background: #e2e8f0;
-    }
-
     .info-label {
       font-size: 0.75rem;
       text-transform: uppercase;
       font-weight: 700;
       color: #64748b;
       margin-bottom: 6px;
-      letter-spacing: 0.5px;
     }
-
     .info-value {
       font-size: 1rem;
       font-weight: 600;
       color: #1e3a8a;
       word-break: break-all;
     }
-
-    .loading {
-      text-align: center;
-      padding: 30px;
-      display: none;
-    }
-
+    .loading { text-align: center; padding: 30px; display: none; }
     .spinner {
-      width: 45px;
-      height: 45px;
+      width: 45px; height: 45px;
       border: 4px solid rgba(255,255,255,0.1);
       border-top: 4px solid #fbbf24;
       border-radius: 50%;
-      animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation: spin 0.8s linear infinite;
       margin: 0 auto 15px;
     }
-
     .error-msg {
       background: #fee2e2;
       color: #dc2626;
@@ -199,12 +123,8 @@
       font-weight: 500;
       text-align: center;
     }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     footer {
       margin-top: auto;
       padding: 20px;
@@ -218,25 +138,24 @@
   <div class="container">
     <header>
       <h1>⚡ Painel de Consulta Pro</h1>
-      <p class="subtitle">CEP, CNPJ ou Telefone (DDD) em tempo real</p>
+      <p class="subtitle">CEP • Telefone • CNPJ • Discord User ID</p>
     </header>
-
     <div class="card">
       <div class="search-area">
         <div class="input-wrapper">
-          <input type="text" id="inputDado" placeholder="Digite número, CEP ou CNPJ..." autocomplete="off">
+          <input type="text" id="inputDado" placeholder="Digite CEP, Telefone, CNPJ ou Discord User ID..." autocomplete="off">
         </div>
         <button id="btnConsultar">CONSULTAR</button>
       </div>
-      <p class="hint">Ex: 11999998888 (Tel), 01001000 (CEP) ou 00000000000191 (CNPJ)</p>
+      <p class="hint">
+        Ex: 01001000 (CEP) | 11999998888 (Tel) | 00000000000191 (CNPJ) | 80351110224678912 (Discord ID)
+      </p>
 
       <div id="loading" class="loading">
         <div class="spinner"></div>
-        <p>Acessando bancos de dados públicos...</p>
+        <p>Consultando...</p>
       </div>
-
       <div id="errorBox" class="error-msg"></div>
-
       <div id="resultado" class="result">
         <div class="result-header">
           <h2 id="tipoConsulta" style="color: #1e40af; font-size: 1.2rem;">Dados Encontrados</h2>
@@ -248,7 +167,7 @@
   </div>
 
   <footer>
-    Utilizando BrasilAPI e ViaCEP • Fontes oficiais atualizadas
+    Utilizando ViaCEP, BrasilAPI e lookup público de Discord User ID
   </footer>
 
   <script>
@@ -260,16 +179,12 @@
     const infoGrid = document.getElementById('infoGrid');
 
     btn.addEventListener('click', puxarDados);
-    
-    inputField.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') puxarDados();
-    });
+    inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') puxarDados(); });
 
     async function puxarDados() {
-      const valor = inputField.value.trim().replace(/\D/g, ''); 
-      
+      let valor = inputField.value.trim();
       if (!valor) {
-        showError('Por favor, insira um valor válido para consulta.');
+        showError('Digite algo para consultar.');
         return;
       }
 
@@ -280,36 +195,48 @@
 
       try {
         let tipo = "";
+        valor = valor.replace(/\s+/g, ''); // remove espaços
 
-        // Identificação por comprimento de caracteres numéricos
-        if (valor.length === 8) {
+        if (valor.length === 8 && !isNaN(valor)) {
+          // CEP
           tipo = "Endereço (CEP)";
-          const response = await fetch(`https://viacep.com.br/ws/${valor}/json/`);
-          const dados = await response.json();
-          if (dados.erro) throw new Error("CEP não encontrado.");
-          renderCEP(dados);
-        } 
-        else if (valor.length === 10 || valor.length === 11) {
-          tipo = "Localidade de Telefone (DDD)";
+          const res = await fetch(`https://viacep.com.br/ws/${valor}/json/`);
+          const data = await res.json();
+          if (data.erro) throw new Error("CEP não encontrado.");
+          renderCEP(data);
+
+        } else if ((valor.length === 10 || valor.length === 11) && !isNaN(valor)) {
+          // Telefone (DDD)
+          tipo = "Localidade de Telefone";
           const ddd = valor.substring(0, 2);
-          const response = await fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
-          if (!response.ok) throw new Error("DDD inválido ou não encontrado.");
-          const dados = await response.json();
-          renderTelefone(dados, valor);
-        }
-        else if (valor.length === 14) {
+          const res = await fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
+          if (!res.ok) throw new Error("DDD inválido.");
+          const data = await res.json();
+          renderTelefone(data, valor);
+
+        } else if (valor.length === 14 && !isNaN(valor)) {
+          // CNPJ
           tipo = "Empresa (CNPJ)";
-          const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${valor}`);
-          if (!response.ok) throw new Error("CNPJ não cadastrado ou erro na base.");
-          const dados = await response.json();
-          renderCNPJ(dados);
-        } 
-        else {
-          throw new Error("Formato inválido. Use 8 dígitos (CEP), 10/11 (Tel) ou 14 (CNPJ).");
+          const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${valor}`);
+          if (!res.ok) throw new Error("CNPJ não encontrado.");
+          const data = await res.json();
+          renderCNPJ(data);
+
+        } else if (valor.length >= 17 && valor.length <= 20 && !isNaN(valor)) {
+          // Discord User ID
+          tipo = "Discord User";
+          const userId = valor;
+          const res = await fetch(`https://discordlookup.com/api/user/${userId}`);
+          if (!res.ok) throw new Error("User ID não encontrado ou API indisponível.");
+          const data = await res.json();
+          renderDiscord(data);
+
+        } else {
+          throw new Error("Formato inválido. Verifique o exemplo abaixo.");
         }
 
         document.getElementById('tipoConsulta').innerText = `✅ ${tipo}`;
-        document.getElementById('timestamp').innerText = new Date().toLocaleTimeString();
+        document.getElementById('timestamp').innerText = new Date().toLocaleTimeString('pt-BR');
         loading.style.display = 'none';
         resultado.classList.add('show');
 
@@ -321,8 +248,8 @@
 
     function renderCEP(data) {
       const items = [
-        { label: "Logradouro", value: data.logradouro },
-        { label: "Bairro", value: data.bairro },
+        { label: "Logradouro", value: data.logradouro || '—' },
+        { label: "Bairro", value: data.bairro || '—' },
         { label: "Cidade", value: data.localidade },
         { label: "Estado", value: data.uf },
         { label: "DDD", value: data.ddd },
@@ -334,32 +261,48 @@
     function renderCNPJ(data) {
       const items = [
         { label: "Razão Social", value: data.razao_social },
-        { label: "Nome Fantasia", value: data.nome_fantasia || "Não informado" },
+        { label: "Nome Fantasia", value: data.nome_fantasia || 'Não informado' },
         { label: "Situação", value: data.descricao_situacao_cadastral },
         { label: "Abertura", value: data.data_inicio_atividade },
         { label: "Cidade/UF", value: `${data.municipio} - ${data.uf}` },
-        { label: "Capital Social", value: `R$ ${data.capital_social.toLocaleString('pt-BR')}` }
+        { label: "Capital Social", value: `R$ ${Number(data.capital_social).toLocaleString('pt-BR')}` }
       ];
       buildGrid(items);
     }
 
     function renderTelefone(data, original) {
       const items = [
-        { label: "Número Consultado", value: original },
+        { label: "Número", value: original },
         { label: "Estado", value: data.state },
-        { label: "Tipo Identificado", value: original.length === 11 ? "Celular" : "Fixo" },
-        { label: "Cidades na Região", value: data.cities.slice(0, 5).join(', ') + "..." }
+        { label: "Tipo", value: original.length === 11 ? "Celular" : "Fixo" },
+        { label: "Cidades", value: data.cities ? data.cities.slice(0,4).join(', ') + '...' : '—' }
+      ];
+      buildGrid(items);
+    }
+
+    function renderDiscord(data) {
+      const createdDate = new Date((BigInt(data.id) >> 22n) + 1420070400000n).toLocaleDateString('pt-BR');
+      const avatarUrl = data.avatar ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png?size=128` : null;
+
+      const items = [
+        { label: "Username", value: data.username || data.tag || '—' },
+        { label: "Global Name", value: data.global_name || data.display_name || 'Não definido' },
+        { label: "User ID", value: data.id },
+        { label: "Conta Criada", value: createdDate },
+        { label: "Bot", value: data.bot ? "Sim" : "Não" },
+        { label: "Avatar", value: avatarUrl ? `<a href="${avatarUrl}" target="_blank">Ver Avatar</a>` : 'Sem avatar' }
       ];
       buildGrid(items);
     }
 
     function buildGrid(items) {
+      infoGrid.innerHTML = '';
       items.forEach(item => {
         const div = document.createElement('div');
         div.className = 'info-item';
         div.innerHTML = `
           <div class="info-label">${item.label}</div>
-          <div class="info-value">${item.value || 'Não informado'}</div>
+          <div class="info-value">${item.value || '—'}</div>
         `;
         infoGrid.appendChild(div);
       });
