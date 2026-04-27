@@ -3,219 +3,372 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Consultas Brasil 2026</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Painel de Consulta Pro</title>
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; }
-    .result { white-space: pre-wrap; }
-    .history-item { transition: all 0.2s; }
-    .history-item:hover { background-color: #f8fafc; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e40af);
+      min-height: 100vh;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      opacity: 0.8;
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .search-area {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid transparent;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.95);
+      color: #0f172a;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #fbbf24;
+      background: #fff;
+    }
+
+    button {
+      padding: 0 32px;
+      background: #fbbf24;
+      color: #0f172a;
+      border: none;
+      border-radius: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: #f59e0b;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      margin-top: 10px;
+      opacity: 0.6;
+      color: #fff;
+    }
+
+    .result {
+      display: none;
+      background: #ffffff;
+      color: #1e2937;
+      border-radius: 16px;
+      padding: 25px;
+      margin-top: 25px;
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 15px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 15px;
+    }
+
+    .info-item {
+      background: #f1f5f9;
+      padding: 15px;
+      border-radius: 12px;
+      transition: background 0.2s;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .info-item:hover {
+      background: #e2e8f0;
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e3a8a;
+      word-break: break-all;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      display: none;
+    }
+
+    .spinner {
+      width: 45px;
+      height: 45px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top: 4px solid #fbbf24;
+      border-radius: 50%;
+      animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      margin: 0 auto 15px;
+    }
+
+    .error-msg {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: none;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      opacity: 0.6;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden mt-8">
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8">
-      <h1 class="text-3xl font-bold flex items-center gap-3">
-        <i class="fas fa-search"></i> Painel de Consultas Brasil 2026
-      </h1>
-      <p class="mt-2 text-blue-100">CEP • CNPJ • CPF • Telefone</p>
-    </div>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚡ Painel de Consulta Pro</h1>
+      <p class="subtitle">CEP, CNPJ ou Telefone (DDD) em tempo real</p>
+    </header>
 
-    <!-- Tabs -->
-    <div class="flex border-b overflow-x-auto">
-      <button onclick="switchTab(0)" class="tab-button flex-1 py-4 font-semibold text-lg border-b-4 border-blue-600 text-blue-600" data-tab="0">CEP</button>
-      <button onclick="switchTab(1)" class="tab-button flex-1 py-4 font-semibold text-lg text-gray-600 hover:text-gray-800" data-tab="1">CNPJ</button>
-      <button onclick="switchTab(2)" class="tab-button flex-1 py-4 font-semibold text-lg text-gray-600 hover:text-gray-800" data-tab="2">CPF</button>
-      <button onclick="switchTab(3)" class="tab-button flex-1 py-4 font-semibold text-lg text-gray-600 hover:text-gray-800" data-tab="3">Telefone</button>
-    </div>
-
-    <div class="p-8">
-      <!-- CEP -->
-      <div id="tab-0" class="tab-content">
-        <div class="flex gap-3">
-          <input id="cepInput" type="text" maxlength="9" placeholder="00000-000" class="flex-1 border border-gray-300 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-blue-500">
-          <button onclick="consultarCEP()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-2xl font-semibold flex items-center gap-2">
-            <i class="fas fa-search"></i> Consultar
-          </button>
+    <div class="card">
+      <div class="search-area">
+        <div class="input-wrapper">
+          <input type="text" id="inputDado" placeholder="Digite número, CEP ou CNPJ..." autocomplete="off">
         </div>
-        <div id="cepResult" class="result mt-6 bg-gray-50 p-6 rounded-2xl min-h-[140px]"></div>
+        <button id="btnConsultar">CONSULTAR</button>
+      </div>
+      <p class="hint">Ex: 11999998888 (Tel), 01001000 (CEP) ou 00000000000191 (CNPJ)</p>
+
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Acessando bancos de dados públicos...</p>
       </div>
 
-      <!-- CNPJ -->
-      <div id="tab-1" class="tab-content hidden">
-        <div class="flex gap-3">
-          <input id="cnpjInput" type="text" maxlength="18" placeholder="00.000.000/0000-00" class="flex-1 border border-gray-300 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-blue-500">
-          <button onclick="consultarCNPJ()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-2xl font-semibold flex items-center gap-2">
-            <i class="fas fa-search"></i> Consultar
-          </button>
-        </div>
-        <div id="cnpjResult" class="result mt-6 bg-gray-50 p-6 rounded-2xl min-h-[140px]"></div>
-      </div>
+      <div id="errorBox" class="error-msg"></div>
 
-      <!-- CPF -->
-      <div id="tab-2" class="tab-content hidden">
-        <div class="flex gap-3">
-          <input id="cpfInput" type="text" maxlength="14" placeholder="000.000.000-00" class="flex-1 border border-gray-300 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-blue-500">
-          <button onclick="consultarCPF()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-2xl font-semibold flex items-center gap-2">
-            <i class="fas fa-search"></i> Consultar
-          </button>
+      <div id="resultado" class="result">
+        <div class="result-header">
+          <h2 id="tipoConsulta" style="color: #1e40af; font-size: 1.2rem;">Dados Encontrados</h2>
+          <span id="timestamp" style="font-size: 0.8rem; color: #94a3b8;"></span>
         </div>
-        <div id="cpfResult" class="result mt-6 bg-gray-50 p-6 rounded-2xl min-h-[140px]"></div>
-        <p class="text-xs text-gray-500 mt-3">* Gratuito: apenas validação + situação básica. Dados completos (nome, mãe, endereço) exigem API paga.</p>
-      </div>
-
-      <!-- Telefone -->
-      <div id="tab-3" class="tab-content hidden">
-        <div class="flex gap-3">
-          <input id="telInput" type="text" maxlength="15" placeholder="(00) 00000-0000" class="flex-1 border border-gray-300 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-blue-500">
-          <button onclick="consultarTelefone()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-2xl font-semibold flex items-center gap-2">
-            <i class="fas fa-search"></i> Consultar
-          </button>
-        </div>
-        <div id="telResult" class="result mt-6 bg-amber-50 p-6 rounded-2xl min-h-[140px] text-amber-800"></div>
-      </div>
-
-      <!-- Histórico -->
-      <div class="mt-12">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-semibold flex items-center gap-2"><i class="fas fa-history"></i> Histórico de Consultas</h2>
-          <button onclick="limparHistorico()" class="text-red-600 hover:text-red-700 text-sm font-medium flex items-center gap-1">
-            <i class="fas fa-trash"></i> Limpar tudo
-          </button>
-        </div>
-        <div id="historico" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+        <div class="info-grid" id="infoGrid"></div>
       </div>
     </div>
   </div>
 
+  <footer>
+    Utilizando BrasilAPI e ViaCEP • Fontes oficiais atualizadas
+  </footer>
+
   <script>
-    let currentTab = 0;
+    const btn = document.getElementById('btnConsultar');
+    const inputField = document.getElementById('inputDado');
+    const errorBox = document.getElementById('errorBox');
+    const loading = document.getElementById('loading');
+    const resultado = document.getElementById('resultado');
+    const infoGrid = document.getElementById('infoGrid');
 
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab-content').forEach((el, i) => el.classList.toggle('hidden', i !== tab));
-      document.querySelectorAll('.tab-button').forEach((btn, i) => {
-        if (i === tab) btn.classList.add('border-b-4', 'border-blue-600', 'text-blue-600');
-        else btn.classList.remove('border-b-4', 'border-blue-600', 'text-blue-600');
-      });
-    }
-
-    // Máscaras automáticas
-    function aplicarMascara(input, tipo) {
-      input.addEventListener('input', () => {
-        let v = input.value.replace(/\D/g, '');
-        if (tipo === 'cep') v = v.slice(0,8).replace(/^(\d{5})(\d{3})$/, '$1-$2');
-        else if (tipo === 'cnpj') v = v.slice(0,14).replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
-        else if (tipo === 'cpf') v = v.slice(0,11).replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
-        else if (tipo === 'tel') {
-          if (v.length <= 10) v = v.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
-          else v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-        }
-        input.value = v;
-      });
-    }
-
-    window.onload = () => {
-      aplicarMascara(document.getElementById('cepInput'), 'cep');
-      aplicarMascara(document.getElementById('cnpjInput'), 'cnpj');
-      aplicarMascara(document.getElementById('cpfInput'), 'cpf');
-      aplicarMascara(document.getElementById('telInput'), 'tel');
-      carregarHistorico();
-    };
-
-    // Validação de CPF (algoritmo oficial)
-    function validarCPF(cpf) {
-      cpf = cpf.replace(/\D/g, '');
-      if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-      let soma = 0, resto;
-      for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i-1]) * (11 - i);
-      resto = (soma * 10) % 11;
-      if (resto === 10 || resto === 11) resto = 0;
-      if (resto !== parseInt(cpf[9])) return false;
-      soma = 0;
-      for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i-1]) * (12 - i);
-      resto = (soma * 10) % 11;
-      if (resto === 10 || resto === 11) resto = 0;
-      return resto === parseInt(cpf[10]);
-    }
-
-    // Consulta CPF (validação + tentativa básica)
-    async function consultarCPF() {
-      let cpf = document.getElementById('cpfInput').value.replace(/\D/g, '');
-      const resultDiv = document.getElementById('cpfResult');
-
-      if (cpf.length !== 11 || !validarCPF(cpf)) {
-        resultDiv.innerHTML = `<p class="text-red-600 font-medium">CPF inválido ou dígito verificador incorreto.</p>`;
-        return;
-      }
-
-      resultDiv.innerHTML = `<p class="text-blue-600">Validando CPF...</p>`;
-
-      // Validação básica + aviso claro
-      resultDiv.innerHTML = `
-        <p class="font-semibold text-green-600">✅ CPF válido</p>
-        <p><strong>CPF:</strong> ${document.getElementById('cpfInput').value}</p>
-        <p class="mt-4 text-amber-700">
-          <strong>Observação:</strong> Não é possível obter nome completo, nome da mãe/pai ou endereço de forma gratuita via API pública (LGPD).<br>
-          Para dados completos, utilize serviços pagos (CPFCNPJ, APIBrasil, etc.).
-        </p>
-      `;
-
-      adicionarAoHistorico('CPF', document.getElementById('cpfInput').value, resultDiv.innerHTML);
-    }
-
-    // (Mantive as funções anteriores de CEP, CNPJ e Telefone – só adicionei o CPF)
-    // ... (cole aqui as funções consultarCEP, consultarCNPJ, consultarTelefone, adicionarAoHistorico, carregarHistorico e limparHistorico da versão anterior)
-
-    async function consultarCEP() { /* mesma função da versão anterior */ }
-    async function consultarCNPJ() { /* mesma função da versão anterior */ }
-    function consultarTelefone() { /* mesma função da versão anterior */ }
-
-    function adicionarAoHistorico(tipo, valor, resultadoHTML) {
-      let historico = JSON.parse(localStorage.getItem('consultaHistorico') || '[]');
-      historico.unshift({ tipo, valor, data: new Date().toLocaleString('pt-BR'), resultado: resultadoHTML });
-      if (historico.length > 25) historico.pop();
-      localStorage.setItem('consultaHistorico', JSON.stringify(historico));
-      carregarHistorico();
-    }
-
-    function carregarHistorico() {
-      const div = document.getElementById('historico');
-      let historico = JSON.parse(localStorage.getItem('consultaHistorico') || '[]');
-      if (historico.length === 0) {
-        div.innerHTML = `<p class="text-gray-400 text-center py-8">Nenhuma consulta ainda.</p>`;
-        return;
-      }
-      div.innerHTML = historico.map(item => `
-        <div class="history-item bg-white border border-gray-200 rounded-2xl p-5 text-sm">
-          <div class="flex justify-between text-xs text-gray-500 mb-2">
-            <span class="font-semibold">${item.tipo}</span>
-            <span>${item.data}</span>
-          </div>
-          <div class="font-mono text-blue-700">${item.valor}</div>
-          <div class="mt-3 text-gray-700 text-xs">${item.resultado}</div>
-        </div>
-      `).join('');
-    }
-
-    function limparHistorico() {
-      if (confirm('Limpar todo o histórico?')) {
-        localStorage.removeItem('consultaHistorico');
-        carregarHistorico();
-      }
-    }
-
-    // Enter key
-    document.addEventListener('keypress', e => {
-      if (e.key === 'Enter') {
-        if (currentTab === 0) consultarCEP();
-        if (currentTab === 1) consultarCNPJ();
-        if (currentTab === 2) consultarCPF();
-        if (currentTab === 3) consultarTelefone();
-      }
+    btn.addEventListener('click', puxarDados);
+    
+    inputField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') puxarDados();
     });
+
+    async function puxarDados() {
+      const valor = inputField.value.trim().replace(/\D/g, ''); 
+      
+      if (!valor) {
+        showError('Por favor, insira um valor válido para consulta.');
+        return;
+      }
+
+      errorBox.style.display = 'none';
+      resultado.classList.remove('show');
+      loading.style.display = 'block';
+      infoGrid.innerHTML = '';
+
+      try {
+        let tipo = "";
+
+        // Identificação por comprimento de caracteres numéricos
+        if (valor.length === 8) {
+          tipo = "Endereço (CEP)";
+          const response = await fetch(`https://viacep.com.br/ws/${valor}/json/`);
+          const dados = await response.json();
+          if (dados.erro) throw new Error("CEP não encontrado.");
+          renderCEP(dados);
+        } 
+        else if (valor.length === 10 || valor.length === 11) {
+          tipo = "Localidade de Telefone (DDD)";
+          const ddd = valor.substring(0, 2);
+          const response = await fetch(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
+          if (!response.ok) throw new Error("DDD inválido ou não encontrado.");
+          const dados = await response.json();
+          renderTelefone(dados, valor);
+        }
+        else if (valor.length === 14) {
+          tipo = "Empresa (CNPJ)";
+          const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${valor}`);
+          if (!response.ok) throw new Error("CNPJ não cadastrado ou erro na base.");
+          const dados = await response.json();
+          renderCNPJ(dados);
+        } 
+        else {
+          throw new Error("Formato inválido. Use 8 dígitos (CEP), 10/11 (Tel) ou 14 (CNPJ).");
+        }
+
+        document.getElementById('tipoConsulta').innerText = `✅ ${tipo}`;
+        document.getElementById('timestamp').innerText = new Date().toLocaleTimeString();
+        loading.style.display = 'none';
+        resultado.classList.add('show');
+
+      } catch (err) {
+        loading.style.display = 'none';
+        showError(err.message);
+      }
+    }
+
+    function renderCEP(data) {
+      const items = [
+        { label: "Logradouro", value: data.logradouro },
+        { label: "Bairro", value: data.bairro },
+        { label: "Cidade", value: data.localidade },
+        { label: "Estado", value: data.uf },
+        { label: "DDD", value: data.ddd },
+        { label: "IBGE", value: data.ibge }
+      ];
+      buildGrid(items);
+    }
+
+    function renderCNPJ(data) {
+      const items = [
+        { label: "Razão Social", value: data.razao_social },
+        { label: "Nome Fantasia", value: data.nome_fantasia || "Não informado" },
+        { label: "Situação", value: data.descricao_situacao_cadastral },
+        { label: "Abertura", value: data.data_inicio_atividade },
+        { label: "Cidade/UF", value: `${data.municipio} - ${data.uf}` },
+        { label: "Capital Social", value: `R$ ${data.capital_social.toLocaleString('pt-BR')}` }
+      ];
+      buildGrid(items);
+    }
+
+    function renderTelefone(data, original) {
+      const items = [
+        { label: "Número Consultado", value: original },
+        { label: "Estado", value: data.state },
+        { label: "Tipo Identificado", value: original.length === 11 ? "Celular" : "Fixo" },
+        { label: "Cidades na Região", value: data.cities.slice(0, 5).join(', ') + "..." }
+      ];
+      buildGrid(items);
+    }
+
+    function buildGrid(items) {
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'info-item';
+        div.innerHTML = `
+          <div class="info-label">${item.label}</div>
+          <div class="info-value">${item.value || 'Não informado'}</div>
+        `;
+        infoGrid.appendChild(div);
+      });
+    }
+
+    function showError(msg) {
+      errorBox.innerText = msg;
+      errorBox.style.display = 'block';
+    }
   </script>
 </body>
 </html>
